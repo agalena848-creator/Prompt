@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Guía de estudio: Administración básica de Routers y Switches Cisco">
+  <title>Routers y Switches | Guía de estudio</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --surface:#ffffff;
+      --surface-2:#f0f2f8;
+      --text:#202534;
+      --muted:#667085;
+      --primary:#635bff;
+      --primary-dark:#4942c8;
+      --accent:#14b8a6;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --border:#e3e6ef;
+      --code:#171923;
+      --shadow:0 12px 35px rgba(31,35,55,.08);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box;scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.65;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    /* ---------- HEADER ---------- */
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+    }
+
+    .header-inner{
+      max-width:1180px;
+      margin:auto;
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      font-weight:800;
+      letter-spacing:-.3px;
+    }
+
+    .brand-icon{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      color:white;
+      background:linear-gradient(135deg,var(--primary),#8b85ff);
+      box-shadow:0 7px 18px rgba(99,91,255,.25);
+      font-size:19px;
+    }
+
+    .menu-btn{
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text);
+      width:44px;
+      height:42px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:21px;
+      display:grid;
+      place-items:center;
+    }
+
+    .menu-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+    .nav{
+      display:none;
+      position:absolute;
+      top:68px;
+      right:18px;
+      width:min(310px,calc(100vw - 36px));
+      padding:10px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .nav.open{display:block}
+
+    .nav a{
+      display:block;
+      padding:10px 12px;
+      border-radius:10px;
+      font-size:14px;
+      color:#41485a;
+    }
+
+    .nav a:hover{
+      background:var(--surface-2);
+      color:var(--primary);
+    }
+
+    /* ---------- GENERAL ---------- */
+    main{
+      max-width:1180px;
+      margin:auto;
+      padding:32px 20px 70px;
+    }
+
+    section{
+      scroll-margin-top:90px;
+      margin-top:42px;
+    }
+
+    .hero{
+      min-height:430px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      align-items:center;
+      gap:45px;
+      padding:50px 0 20px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:7px 11px;
+      border-radius:999px;
+      background:#ebeaff;
+      color:var(--primary-dark);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    h1{
+      margin:15px 0 14px;
+      font-size:clamp(2.2rem,5vw,4.3rem);
+      line-height:1.03;
+      letter-spacing:-2.5px;
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(1.6rem,3vw,2.25rem);
+      letter-spacing:-1px;
+    }
+
+    h3{margin-top:0}
+    p{color:#4e5668}
+
+    .hero p{
+      max-width:680px;
+      font-size:1.06rem;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:11px;
+      margin-top:25px;
+    }
+
+    .btn{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      padding:12px 17px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:white;
+      border-color:var(--primary);
+    }
+
+    .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+    .btn-light{background:white}
+    .btn-light:hover{border-color:var(--primary);color:var(--primary)}
+
+    /* ---------- HERO DIAGRAM ---------- */
+    .network-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .network-title{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      margin-bottom:13px;
+    }
+
+    .network{
+      min-height:285px;
+      border-radius:18px;
+      background:
+        radial-gradient(circle at 10% 15%,rgba(99,91,255,.09),transparent 30%),
+        radial-gradient(circle at 90% 85%,rgba(20,184,166,.09),transparent 30%),
+        #fafbff;
+      border:1px dashed #d8dbe7;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:25px;
+      padding:20px;
+    }
+
+    .device{
+      width:130px;
+      text-align:center;
+      background:white;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:15px 10px;
+      box-shadow:0 8px 20px rgba(30,34,60,.06);
+    }
+
+    .device-icon{
+      width:54px;
+      height:54px;
+      margin:0 auto 9px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      font-size:25px;
+    }
+
+    .router .device-icon{background:#e9e7ff;color:var(--primary)}
+    .switch .device-icon{background:#dcf8f3;color:#0f8e80}
+
+    .device strong{display:block;font-size:14px}
+    .device small{color:var(--muted);font-size:11px}
+
+    .connection{
+      flex:1;
+      max-width:95px;
+      height:3px;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      position:relative;
+    }
+
+    .connection::after{
+      content:"";
+      position:absolute;
+      right:-1px;
+      top:50%;
+      transform:translateY(-50%);
+      border-left:7px solid var(--accent);
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+    }
+
+    /* ---------- CARDS ---------- */
+    .section-heading{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:18px;
+    }
+
+    .section-heading p{
+      max-width:700px;
+      margin:0;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:21px;
+      box-shadow:0 7px 25px rgba(31,35,55,.045);
+    }
+
+    .card:hover{
+      box-shadow:var(--shadow);
+      transform:translateY(-2px);
+      transition:.2s;
+    }
+
+    .number{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:#ecebff;
+      color:var(--primary-dark);
+      font-weight:800;
+      margin-bottom:13px;
+    }
+
+    .card p{font-size:14px;margin-bottom:0}
+
+    /* ---------- NOTES ---------- */
+    .note{
+      border-left:4px solid var(--primary);
+      background:#f0efff;
+      padding:15px 17px;
+      border-radius:0 13px 13px 0;
+      margin:18px 0;
+    }
+
+    .note strong{color:#433bb6}
+    .important{
+      border-left-color:var(--warning);
+      background:#fff7e7;
+    }
+    .important strong{color:#a76400}
+
+    .success{
+      border-left-color:var(--accent);
+      background:#eafaf7;
+    }
+    .success strong{color:#08796e}
+
+    /* ---------- CODE ---------- */
+    .code-wrap{
+      position:relative;
+      margin:16px 0;
+    }
+
+    pre{
+      margin:0;
+      padding:19px;
+      padding-top:46px;
+      overflow:auto;
+      background:var(--code);
+      color:#e8eaf1;
+      border-radius:15px;
+      font:13px/1.75 Consolas,Monaco,"Courier New",monospace;
+      box-shadow:0 8px 25px rgba(23,25,35,.12);
+    }
+
+    .code-label{
+      position:absolute;
+      top:10px;
+      left:14px;
+      color:#aeb4c8;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      z-index:1;
+    }
+
+    .copy{
+      position:absolute;
+      right:9px;
+      top:8px;
+      border:1px solid #3a3d4b;
+      background:#222532;
+      color:#dce0eb;
+      border-radius:8px;
+      padding:5px 8px;
+      cursor:pointer;
+      font-size:11px;
+      z-index:2;
+    }
+
+    .copy:hover{background:#303342}
+
+    code:not(pre code){
+      background:#f0f1f5;
+      color:#454b5c;
+      padding:2px 5px;
+      border-radius:5px;
+      font-size:.9em;
+    }
+
+    /* ---------- TABLE ---------- */
+    .table-wrap{
+      overflow-x:auto;
+      border:1px solid var(--border);
+      border-radius:15px;
+      background:white;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:650px;
+    }
+
+    th,td{
+      text-align:left;
+      padding:13px 15px;
+      border-bottom:1px solid var(--border);
+      font-size:14px;
+    }
+
+    th{
+      background:#f7f8fc;
+      color:#454b5b;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    tr:last-child td{border-bottom:0}
+
+    /* ---------- STEP ---------- */
+    .step{
+      display:grid;
+      grid-template-columns:54px 1fr;
+      gap:16px;
+      align-items:start;
+      margin:20px 0;
+    }
+
+    .step-num{
+      width:54px;
+      height:54px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:var(--primary);
+      color:white;
+      font-size:19px;
+      font-weight:800;
+      box-shadow:0 8px 18px rgba(99,91,255,.22);
+    }
+
+    .step-content{
+      background:white;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px;
+    }
+
+    .step-content h3{margin:0 0 7px}
+
+    /* ---------- CHECKLIST ---------- */
+    .checklist{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+
+    .checklist li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:9px 0;
+      border-bottom:1px solid var(--border);
+    }
+
+    .checklist li:last-child{border-bottom:0}
+    .check{color:var(--accent);font-weight:900}
+
+    /* ---------- RESOURCES ---------- */
+    .resources{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .resource{
+      border-radius:20px;
+      padding:25px;
+      background:linear-gradient(135deg,#625bff,#817bff);
+      color:white;
+      box-shadow:0 15px 30px rgba(99,91,255,.2);
+    }
+
+    .resource.packet{
+      background:linear-gradient(135deg,#118f83,#20b8a7);
+      box-shadow:0 15px 30px rgba(20,184,166,.18);
+    }
+
+    .resource p{color:rgba(255,255,255,.85);font-size:14px}
+
+    .resource .btn{
+      background:white;
+      color:#393b4a;
+      border:0;
+      margin-top:8px;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#171923;
+      color:#dce0eb;
+      padding:28px 20px;
+    }
+
+    .footer-inner{
+      max-width:1180px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    footer p{margin:0;color:#aeb4c8;font-size:13px}
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width:850px){
+      .hero{grid-template-columns:1fr;padding-top:35px}
+      .grid{grid-template-columns:1fr 1fr}
+      .resources{grid-template-columns:1fr}
+    }
+
+    @media (max-width:600px){
+      main{padding:22px 14px 55px}
+      .header-inner{padding:12px 14px}
+      .brand span{display:none}
+      .hero{min-height:auto}
+      h1{letter-spacing:-1.5px}
+      .grid{grid-template-columns:1fr}
+      .network{gap:8px;padding:12px}
+      .device{width:105px;padding:11px 6px}
+      .device-icon{width:45px;height:45px;font-size:20px}
+      .connection{max-width:40px}
+      .step{grid-template-columns:40px 1fr;gap:10px}
+      .step-num{width:40px;height:40px;border-radius:12px;font-size:15px}
+      .section-heading{display:block}
+      .section-heading p{margin-top:5px}
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="#inicio" aria-label="Inicio">
+      <div class="brand-icon">⌘</div>
+      <span>Routers & Switches</span>
+    </a>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="nav" id="mainNav">
+      <a href="#inicio">🏠 Inicio</a>
+      <a href="#conceptos">📚 Conceptos</a>
+      <a href="#router">1. Router</a>
+      <a href="#verificacion">2. Verificación</a>
+      <a href="#vlan">3. VLAN administrativa</a>
+      <a href="#gateway">4. Gateway</a>
+      <a href="#puerto">5. Puerto de acceso</a>
+      <a href="#ejemplo">6. Red completa</a>
+      <a href="#conectividad">7. Conectividad</a>
+      <a href="#diferencias">8. Diferencias</a>
+      <a href="#repaso">🧠 Repaso</a>
+      <a href="#recursos">📝 Práctica y Forms</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- INICIO -->
+  <section id="inicio" class="hero">
+    <div>
+      <span class="eyebrow">📘 GUÍA DE ESTUDIO · CISCO</span>
+      <h1>Administración básica de Routers y Switches</h1>
+      <p>
+        Aprende paso a paso cómo configurar un router, crear una VLAN administrativa,
+        asignar una IP a un switch, establecer su gateway y comprobar la conectividad
+        mediante Cisco Packet Tracer.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#router">Comenzar a estudiar →</a>
+        <a class="btn btn-light" href="#repaso">Ver repaso rápido</a>
+      </div>
+    </div>
+
+    <div class="network-card" aria-label="Diagrama visual de router y switch">
+      <div class="network-title">DIAGRAMA BÁSICO DE LA PRÁCTICA</div>
+      <div class="network">
+        <div class="device router">
+          <div class="device-icon">◈</div>
+          <strong>Router R1</strong>
+          <small>192.168.10.1</small>
+        </div>
+        <div class="connection"></div>
+        <div class="device switch">
+          <div class="device-icon">▦</div>
+          <strong>Switch S1</strong>
+          <small>VLAN 99 · .2</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCEPTOS -->
+  <section id="conceptos">
+    <div class="section-heading">
+      <div>
+        <h2>Antes de comenzar</h2>
+        <p>Estos conceptos te ayudan a entender qué estás configurando y por qué cada dispositivo utiliza una IP de manera diferente.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <div class="number">01</div>
+        <h3>Router</h3>
+        <p>Conecta diferentes redes y dirige los paquetes de datos entre ellas. La IP normalmente se asigna directamente a una interfaz física.</p>
+      </article>
+
+      <article class="card">
+        <div class="number">02</div>
+        <h3>Switch de capa 2</h3>
+        <p>Permite conectar dispositivos dentro de una red. Para administrarlo mediante IP se utiliza una interfaz virtual asociada a una VLAN.</p>
+      </article>
+
+      <article class="card">
+        <div class="number">03</div>
+        <h3>SVI</h3>
+        <p>Significa <strong>Switch Virtual Interface</strong>. Es la interfaz virtual de una VLAN utilizada para asignar la IP de administración al switch.</p>
+      </article>
+
+      <article class="card">
+        <div class="number">04</div>
+        <h3>CLI</h3>
+        <p>La <strong>Command Line Interface</strong> permite introducir los comandos de configuración en equipos Cisco.</p>
+      </article>
+
+      <article class="card">
+        <div class="number">05</div>
+        <h3>Gateway</h3>
+        <p>Es la puerta de enlace que permite al switch utilizar el router para comunicarse con redes diferentes a la red local.</p>
+      </article>
+
+      <article class="card">
+        <div class="number">06</div>
+        <h3>Packet Tracer</h3>
+        <p>Entorno de práctica utilizado para simular y comprobar configuraciones de redes Cisco sin necesidad de equipos físicos.</p>
+      </article>
+    </div>
+
+    <div class="note important">
+      <strong>⭐ Dato que debes recordar:</strong>
+      en el router la IP se asigna normalmente a una <strong>interfaz física</strong>;
+      en un switch de capa 2, la IP de administración se asigna a una <strong>interfaz virtual de VLAN</strong>.
+    </div>
+  </section>
+
+  <!-- ROUTER -->
+  <section id="router">
+    <div class="section-heading">
+      <div>
+        <h2>1. Administración básica de un router</h2>
+        <p>Configuraremos la interfaz FastEthernet0/0 con la dirección 192.168.10.1.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📌 Datos de la red</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Dato</th><th>Valor</th></tr>
+          <tr><td>Red</td><td><code>192.168.10.0/24</code></td></tr>
+          <tr><td>Máscara</td><td><code>255.255.255.0</code></td></tr>
+          <tr><td>IP del router</td><td><code>192.168.10.1</code></td></tr>
+          <tr><td>Interfaz utilizada</td><td><code>FastEthernet0/0</code></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Entrar al modo privilegiado</h3>
+        <p>Primero se utiliza <code>enable</code>.</p>
+        <div class="code-wrap">
+          <span class="code-label">Cisco CLI</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>enable</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Entrar a configuración global</h3>
+        <div class="code-wrap">
+          <span class="code-label">Cisco CLI</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>configure terminal</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Seleccionar la interfaz</h3>
+        <p>En este ejemplo se utiliza FastEthernet0/0. También puede escribirse como <code>fa0/0</code>.</p>
+        <div class="code-wrap">
+          <span class="code-label">Cisco CLI</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>interface FastEthernet0/0</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Asignar IP y activar la interfaz</h3>
+        <div class="code-wrap">
+          <span class="code-label">Cisco CLI</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>ip address 192.168.10.1 255.255.255.0
+no shutdown
+end</code></pre>
+        </div>
+        <div class="note success">
+          <strong>💡 Recuerda:</strong> <code>ip address</code> asigna la dirección IP y la máscara; <code>no shutdown</code> activa la interfaz.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🧩 Configuración completa del router</h3>
+      <div class="code-wrap">
+        <span class="code-label">R1</span>
+        <button class="copy" onclick="copyCode(this)">Copiar</button>
+        <pre><code>enable
+configure terminal
+interface FastEthernet0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+end</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERIFICACION -->
+  <section id="verificacion">
+    <div class="section-heading">
+      <div>
+        <h2>2. Verificación del router</h2>
+        <p>Después de configurar la interfaz, debemos comprobar que realmente quedó activa.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔎 Comando principal</h3>
+      <div class="code-wrap">
+        <span class="code-label">Cisco CLI</span>
+        <button class="copy" onclick="copyCode(this)">Copiar</button>
+        <pre><code>show ip interface brief</code></pre>
+      </div>
+      <p>Este comando muestra de forma resumida las interfaces, sus direcciones IP y su estado.</p>
+
+      <div class="table-wrap">
+        <table>
+          <tr><th>Interface</th><th>IP-Address</th><th>Method</th><th>Status</th><th>Protocol</th></tr>
+          <tr><td>FastEthernet0/0</td><td>192.168.10.1</td><td>manual</td><td>up</td><td>up</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="note success">
+      <strong>✅ ¿Qué significa up/up?</strong>
+      La interfaz está activa y el protocolo de línea también está funcionando correctamente.
+    </div>
+  </section>
+
+  <!-- VLAN -->
+  <section id="vlan">
+    <div class="section-heading">
+      <div>
+        <h2>3. VLAN administrativa en un switch</h2>
+        <p>Ahora configuraremos la VLAN 99 como VLAN de administración del switch.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Datos de la VLAN</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Dato</th><th>Valor</th></tr>
+          <tr><td>VLAN administrativa</td><td><code>99</code></td></tr>
+          <tr><td>Nombre</td><td><code>ADMINISTRACION</code></td></tr>
+          <tr><td>IP del switch</td><td><code>192.168.10.2</code></td></tr>
+          <tr><td>Máscara</td><td><code>255.255.255.0</code></td></tr>
+          <tr><td>Gateway</td><td><code>192.168.10.1</code></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Crear la VLAN 99</h3>
+        <div class="code-wrap">
+          <span class="code-label">S1</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>enable
+configure terminal
+vlan 99
+name ADMINISTRACION
+exit</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Configurar la SVI</h3>
+        <p>La SVI corresponde a <code>interface vlan 99</code>.</p>
+        <div class="code-wrap">
+          <span class="code-label">S1</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>interface vlan 99
+ip address 192.168.10.2 255.255.255.0
+no shutdown</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="note important">
+      <strong>⚠️ No confundas:</strong>
+      <code>interface FastEthernet0/1</code> es un puerto físico; <code>interface vlan 99</code> es la interfaz virtual utilizada para administrar el switch.
+    </div>
+  </section>
+
+  <!-- GATEWAY -->
+  <section id="gateway">
+    <div class="section-heading">
+      <div>
+        <h2>4. Configuración del gateway</h2>
+        <p>El gateway indica al switch qué dispositivo debe utilizar como puerta de enlace para comunicarse con otras redes.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🌐 Gateway del ejemplo</h3>
+      <p>Como el router tiene la dirección <code>192.168.10.1</code>, esa será la puerta de enlace del switch.</p>
+      <div class="code-wrap">
+        <span class="code-label">S1</span>
+        <button class="copy" onclick="copyCode(this)">Copiar</button>
+        <pre><code>ip default-gateway 192.168.10.1</code></pre>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>🧠 Para memorizar:</strong> el gateway del switch apunta al router. En este ejercicio, <strong>.1 = router</strong> y <strong>.2 = switch</strong>.
+    </div>
+  </section>
+
+  <!-- PUERTO -->
+  <section id="puerto">
+    <div class="section-heading">
+      <div>
+        <h2>5. Asignar un puerto a la VLAN</h2>
+        <p>La VLAN administrativa necesita que al menos un puerto del switch esté asociado a ella para tener conectividad.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔌 FastEthernet0/1 → VLAN 99</h3>
+      <p>En el ejemplo, el router está conectado al puerto FastEthernet0/1 del switch.</p>
+      <div class="code-wrap">
+        <span class="code-label">S1</span>
+        <button class="copy" onclick="copyCode(this)">Copiar</button>
+        <pre><code>interface FastEthernet0/1
+switchport mode access
+switchport access vlan 99
+no shutdown</code></pre>
+      </div>
+
+      <div class="note success">
+        <strong>✅ Resultado:</strong> el puerto FastEthernet0/1 queda asociado a la VLAN 99.
+      </div>
+    </div>
+  </section>
+
+  <!-- EJEMPLO COMPLETO -->
+  <section id="ejemplo">
+    <div class="section-heading">
+      <div>
+        <h2>6. Ejemplo completo de la red</h2>
+        <p>Esta es la configuración que debes poder reconocer y reproducir en Packet Tracer.</p>
+      </div>
+    </div>
+
+    <div class="network-card">
+      <div class="network-title">TOPOLOGÍA DEL EJERCICIO</div>
+      <div class="network">
+        <div class="device router">
+          <div class="device-icon">◈</div>
+          <strong>Router R1</strong>
+          <small>Fa0/0 · 192.168.10.1</small>
+        </div>
+        <div class="connection"></div>
+        <div class="device switch">
+          <div class="device-icon">▦</div>
+          <strong>Switch S1</strong>
+          <small>Fa0/1 · VLAN 99</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3>🗺️ Resumen de direccionamiento</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Elemento</th><th>Configuración</th></tr>
+          <tr><td>Red</td><td>192.168.10.0/24</td></tr>
+          <tr><td>Máscara</td><td>255.255.255.0</td></tr>
+          <tr><td>Router R1</td><td>192.168.10.1</td></tr>
+          <tr><td>Switch S1</td><td>192.168.10.2</td></tr>
+          <tr><td>VLAN administrativa</td><td>99</td></tr>
+          <tr><td>Gateway del switch</td><td>192.168.10.1</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <article class="card">
+        <h3>Router R1</h3>
+        <div class="code-wrap">
+          <span class="code-label">CONFIGURACIÓN</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>enable
+configure terminal
+interface FastEthernet0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+end</code></pre>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Switch S1</h3>
+        <div class="code-wrap">
+          <span class="code-label">CONFIGURACIÓN</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>enable
+configure terminal
+vlan 99
+name ADMINISTRACION
+exit
+interface vlan 99
+ip address 192.168.10.2 255.255.255.0
+no shutdown
+exit
+ip default-gateway 192.168.10.1
+interface FastEthernet0/1
+switchport mode access
+switchport access vlan 99
+no shutdown
+end</code></pre>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONECTIVIDAD -->
+  <section id="conectividad">
+    <div class="section-heading">
+      <div>
+        <h2>7. Comprobación de conectividad</h2>
+        <p>Una vez configurados los dispositivos, comprobamos que pueden comunicarse entre sí.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <div class="number">R1</div>
+        <h3>Desde el router</h3>
+        <p>Haz ping hacia la IP de administración del switch:</p>
+        <div class="code-wrap">
+          <span class="code-label">PING</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>ping 192.168.10.2</code></pre>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="number">S1</div>
+        <h3>Desde el switch</h3>
+        <p>Haz ping hacia la dirección del router:</p>
+        <div class="code-wrap">
+          <span class="code-label">PING</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>ping 192.168.10.1</code></pre>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="number">🔎</div>
+        <h3>Revisar interfaces</h3>
+        <p>También puedes verificar las IP y el estado de las interfaces:</p>
+        <div class="code-wrap">
+          <span class="code-label">VERIFICACIÓN</span>
+          <button class="copy" onclick="copyCode(this)">Copiar</button>
+          <pre><code>show ip interface brief</code></pre>
+        </div>
+      </article>
+    </div>
+
+    <div class="note success">
+      <strong>🎯 Resultado esperado:</strong> cuando la comunicación funciona correctamente, el ping muestra respuestas representadas normalmente mediante signos de exclamación: <strong>!!!!!</strong>
+    </div>
+
+    <div class="card">
+      <h3>Estado esperado de la SVI</h3>
+      <div class="code-wrap">
+        <span class="code-label">S1</span>
+        <button class="copy" onclick="copyCode(this)">Copiar</button>
+        <pre><code>Vlan99  192.168.10.2  YES  manual  up  up</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFERENCIAS -->
+  <section id="diferencias">
+    <div class="section-heading">
+      <div>
+        <h2>8. Router vs. Switch</h2>
+        <p>La diferencia más importante de esta práctica está en dónde se configura la dirección IP.</p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Característica</th>
+          <th>Router</th>
+          <th>Switch de capa 2</th>
+        </tr>
+        <tr>
+          <td>IP de administración/configuración</td>
+          <td>Interfaz física</td>
+          <td>Interfaz virtual de VLAN (SVI)</td>
+        </tr>
+        <tr>
+          <td>Ejemplo de interfaz</td>
+          <td><code>interface fa0/0</code></td>
+          <td><code>interface vlan 99</code></td>
+        </tr>
+        <tr>
+          <td>IP del ejemplo</td>
+          <td>192.168.10.1</td>
+          <td>192.168.10.2</td>
+        </tr>
+        <tr>
+          <td>Gateway</td>
+          <td>No se configura como en el switch</td>
+          <td><code>ip default-gateway 192.168.10.1</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="note important">
+      <strong>⭐ Regla de oro:</strong><br>
+      Router → <strong>IP → interfaz física</strong><br>
+      Switch de capa 2 → <strong>IP de administración → SVI/VLAN</strong><br>
+      Gateway del switch → <strong>IP del router</strong>
+    </div>
+  </section>
+
+  <!-- REPASO -->
+  <section id="repaso">
+    <div class="section-heading">
+      <div>
+        <h2>🧠 Repaso rápido</h2>
+        <p>Si puedes responder estas preguntas sin mirar las respuestas, ya tienes una buena base para la práctica.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <h3>¿Qué hace <code>enable</code>?</h3>
+        <p>Permite entrar al modo privilegiado.</p>
+      </article>
+
+      <article class="card">
+        <h3>¿Para qué sirve <code>no shutdown</code>?</h3>
+        <p>Activa una interfaz que puede encontrarse administrativamente apagada.</p>
+      </article>
+
+      <article class="card">
+        <h3>¿Qué es una SVI?</h3>
+        <p>Una Switch Virtual Interface asociada a una VLAN.</p>
+      </article>
+
+      <article class="card">
+        <h3>¿Qué VLAN usamos?</h3>
+        <p>La VLAN <strong>99</strong>, con nombre <strong>ADMINISTRACION</strong>.</p>
+      </article>
+
+      <article class="card">
+        <h3>¿Cuál es la IP del router?</h3>
+        <p><strong>192.168.10.1</strong></p>
+      </article>
+
+      <article class="card">
+        <h3>¿Cuál es la IP del switch?</h3>
+        <p><strong>192.168.10.2</strong></p>
+      </article>
+
+      <article class="card">
+        <h3>¿Qué comando verifica interfaces?</h3>
+        <p><code>show ip interface brief</code></p>
+      </article>
+
+      <article class="card">
+        <h3>¿Qué comando prueba conectividad?</h3>
+        <p><code>ping</code> seguido de la IP de destino.</p>
+      </article>
+
+      <article class="card">
+        <h3>¿Qué significa up/up?</h3>
+        <p>La interfaz y el protocolo de línea están funcionando correctamente.</p>
+      </article>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3>✅ Checklist antes de entregar tu práctica</h3>
+      <ul class="checklist">
+        <li><span class="check">✓</span><span>El router tiene configurada la IP 192.168.10.1/24.</span></li>
+        <li><span class="check">✓</span><span>La interfaz del router está activa con <code>no shutdown</code>.</span></li>
+        <li><span class="check">✓</span><span>La VLAN 99 existe y se llama ADMINISTRACION.</span></li>
+        <li><span class="check">✓</span><span>La SVI VLAN 99 tiene la IP 192.168.10.2/24.</span></li>
+        <li><span class="check">✓</span><span>El switch tiene como gateway 192.168.10.1.</span></li>
+        <li><span class="check">✓</span><span>FastEthernet0/1 pertenece a la VLAN 99.</span></li>
+        <li><span class="check">✓</span><span>El ping entre router y switch responde correctamente.</span></li>
+        <li><span class="check">✓</span><span><code>show ip interface brief</code> muestra las interfaces esperadas.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RECURSOS -->
+  <section id="recursos">
+    <div class="section-heading">
+      <div>
+        <h2>📝 Pon a prueba lo aprendido</h2>
+        <p>Después de estudiar, realiza el formulario y descarga la práctica para llevar la configuración a Packet Tracer.</p>
+      </div>
+    </div>
+
+    <div class="resources">
+      <article class="resource">
+        <h3>🧠 Google Forms</h3>
+        <p>Responde el cuestionario para comprobar cuánto dominas la administración básica de routers y switches.</p>
+
+        <!-- CAMBIA EL href POR EL ENLACE REAL DE TU GOOGLE FORMS -->
+        <a class="btn" href="https://forms.gle/5NEWyrStG8QGFwKD9" target="_blank" rel="noopener noreferrer">
+          Abrir Google Forms ↗
+        </a>
+      </article>
+
+      <article class="resource packet">
+        <h3>💻 Práctica de Packet Tracer</h3>
+        <p>Descarga el archivo de práctica y reproduce la configuración de R1 y S1 siguiendo esta guía.</p>
+
+        <!-- CAMBIA EL href POR LA RUTA O ENLACE REAL DE TU ARCHIVO .PKT -->
+        <a class="btn" href="practica061026.pkt" download>
+          Descargar práctica .pkt ↓
+        </a>
+      </article>
+    </div>
+
+  
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p><strong>Routers & Switches</strong> · Guía de estudio</p>
+    <p>Basada en el material de Administración básica de routers y switches.</p>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+
+  // Abre/cierra el menú.
+  menuBtn.addEventListener("click", () => {
+    const isOpen = nav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", isOpen);
+    menuBtn.textContent = isOpen ? "✕" : "☰";
+  });
+
+  // El menú se contrae automáticamente después de seleccionar una opción.
+  document.querySelectorAll("#mainNav a").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.textContent = "☰";
+    });
+  });
+
+  // También se cierra si se hace clic fuera del menú.
+  document.addEventListener("click", (event) => {
+    if (!nav.contains(event.target) && !menuBtn.contains(event.target)) {
+      nav.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.textContent = "☰";
+    }
+  });
+
+  // Copiar comandos de Cisco.
+  function copyCode(button){
+    const code = button.parentElement.querySelector("code").innerText;
+
+    navigator.clipboard.writeText(code).then(() => {
+      const original = button.textContent;
+      button.textContent = "¡Copiado!";
+      setTimeout(() => button.textContent = original, 1300);
+    }).catch(() => {
+      button.textContent = "No disponible";
+      setTimeout(() => button.textContent = "Copiar", 1300);
+    });
+  }
+</script>
+
+</body>
+</html>
